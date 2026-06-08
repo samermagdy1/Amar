@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
@@ -28,6 +28,14 @@
       --whatsapp: #25d366;
       --transition: 0.22s cubic-bezier(.4,0,.2,1);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+      /* ===== FORM INPUT COLORS (explicit, no inheritance issues) ===== */
+      --input-bg: #ffffff;
+      --input-text: #1a2e22;
+      --input-placeholder: #8aab95;
+      --input-border: rgba(26,107,74,0.2);
+      --input-border-focus: #2d9968;
+      --input-bg-focus: #ffffff;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -97,14 +105,19 @@
       border: none;
       font-family: 'Cairo', sans-serif;
       font-size: clamp(13px,3.5vw,15px);
-      background: rgba(255,255,255,0.95);
-      color: var(--text);
+      /* Always white background, always dark text — no mode issues */
+      background: #ffffff;
+      color: #1a2e22;
       outline: none;
       box-shadow: 0 4px 20px rgba(0,0,0,0.13);
       transition: var(--transition);
     }
-    .search-input:focus { background: #fff; box-shadow: 0 4px 24px rgba(0,0,0,0.18); }
-    .search-input::placeholder { color: #9ab; }
+    .search-input:focus {
+      background: #ffffff;
+      color: #1a2e22;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    }
+    .search-input::placeholder { color: #8aab95; }
     .search-btn {
       position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
       width: 34px; height: 34px;
@@ -204,7 +217,6 @@
       font-size: clamp(36px,10vw,52px);
       background: linear-gradient(135deg, var(--surface2), #ddeedd);
     }
-    /* Multi-image indicator */
     .img-count-badge {
       position: absolute; bottom: 6px; right: 6px;
       background: rgba(0,0,0,0.55); color: #fff;
@@ -382,17 +394,63 @@
     .sheet-title { font-size: clamp(16px,4vw,18px); font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
     .sheet-content { font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; }
 
-    /* ====== FORM ====== */
+    /* ====== FORM — FULL COLOR RESET ====== */
+    /* All form controls use explicit, non-inherited colors so they
+       look correct in both light and dark mode at every state        */
     .form-group { margin-bottom: 13px; }
     .form-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; color: var(--text); }
-    .form-input, .form-select, .form-textarea {
-      width: 100%; padding: 12px 14px;
-      border: 1.5px solid var(--border); border-radius: var(--radius-sm);
-      font-family: 'Cairo', sans-serif; font-size: 14px;
-      color: var(--text); background: var(--bg); outline: none; transition: var(--transition);
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid rgba(26,107,74,0.2);
+      border-radius: var(--radius-sm);
+      font-family: 'Cairo', sans-serif;
+      font-size: 14px;
+      /* Explicit colors — never inherit mode-dependent vars for bg/text */
+      background-color: #ffffff;
+      color: #1a2e22;
+      outline: none;
+      transition: var(--transition);
+      -webkit-text-fill-color: #1a2e22; /* overrides Safari autofill tint */
+      caret-color: var(--primary);
     }
-    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--primary-light); background: #fff; }
+
+    .form-input::placeholder,
+    .form-textarea::placeholder {
+      color: #8aab95;
+      -webkit-text-fill-color: #8aab95;
+    }
+
+    .form-select option {
+      background: #ffffff;
+      color: #1a2e22;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: var(--primary-light);
+      background-color: #ffffff;
+      color: #1a2e22;
+      -webkit-text-fill-color: #1a2e22;
+      box-shadow: 0 0 0 3px rgba(45,153,104,0.14);
+    }
+
+    /* Autofill overrides (Chrome fills inputs with blue tint) */
+    .form-input:-webkit-autofill,
+    .form-input:-webkit-autofill:hover,
+    .form-input:-webkit-autofill:focus,
+    .form-input:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 40px #ffffff inset !important;
+      -webkit-text-fill-color: #1a2e22 !important;
+      caret-color: #1a2e22;
+    }
+
     .form-textarea { min-height: 90px; resize: none; }
+
     .btn-primary {
       width: 100%; padding: 14px;
       background: var(--primary); color: #fff; border: none;
@@ -533,6 +591,14 @@
     }
     .wa-send-info strong { display: block; font-size: 13px; margin-bottom: 3px; }
 
+    /* Share API supported badge */
+    .share-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: #e8f5e9; color: #2e7d32;
+      border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700;
+      margin-bottom: 6px;
+    }
+
     /* ====== SMALL UTILS ====== */
     .divider { height: 1px; background: var(--border); margin: 16px 0; }
     .empty-state { grid-column: 1/-1; text-align: center; padding: clamp(24px,6vw,36px) 20px; color: var(--text-muted); }
@@ -549,13 +615,55 @@
     @media (min-width: 768px) {
       .workers-scroll .worker-card { min-width: 190px; max-width: 190px; }
     }
+
+    /* ====== DARK MODE ====== */
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #0f1f16; --surface: #1a2e22; --surface2: #1e3428;
-        --text: #e8f5e9; --text-muted: #7ab890; --border: rgba(45,153,104,0.18);
-        --shadow: 0 2px 12px rgba(0,0,0,0.3); --shadow-lg: 0 8px 28px rgba(0,0,0,0.4);
+        --bg: #0f1f16;
+        --surface: #1a2e22;
+        --surface2: #1e3428;
+        --text: #e8f5e9;
+        --text-muted: #7ab890;
+        --border: rgba(45,153,104,0.18);
+        --shadow: 0 2px 12px rgba(0,0,0,0.3);
+        --shadow-lg: 0 8px 28px rgba(0,0,0,0.4);
       }
       .product-footer { background: #182b1f; }
+
+      /* Form fields in dark mode — keep white/light bg with dark text */
+      /* for readability. Use a slightly tinted white so it doesn't
+         clash too hard with the dark sheet background.             */
+      .form-input,
+      .form-select,
+      .form-textarea {
+        background-color: #f0faf3;
+        color: #1a2e22;
+        border-color: rgba(45,153,104,0.3);
+        -webkit-text-fill-color: #1a2e22;
+      }
+      .form-input::placeholder,
+      .form-textarea::placeholder {
+        color: #7a9f88;
+        -webkit-text-fill-color: #7a9f88;
+      }
+      .form-select option {
+        background: #f0faf3;
+        color: #1a2e22;
+      }
+      .form-input:focus,
+      .form-select:focus,
+      .form-textarea:focus {
+        background-color: #ffffff;
+        color: #1a2e22;
+        -webkit-text-fill-color: #1a2e22;
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(45,153,104,0.2);
+      }
+      .wa-send-info {
+        background: rgba(37,211,102,0.08);
+        color: #7ab890;
+        border-color: rgba(37,211,102,0.18);
+      }
     }
   </style>
 </head>
@@ -855,11 +963,9 @@
       <div class="img-preview-grid" id="img-preview-grid" style="display:none;"></div>
       <div class="img-count-label" id="img-count-label"></div>
 
-      <!-- WA INFO -->
-      <div class="wa-send-info">
-        <strong>📸 كيف ترسل الصور؟</strong>
-        بعد الضغط على "نشر الإعلان"، سيفتح واتساب برسالة البيانات.<br>
-        ابعت الصور في نفس المحادثة مباشرة — الإدارة هتتواصل معك لنشر إعلانك.
+      <!-- WA INFO — updated dynamically by JS based on Share API support -->
+      <div class="wa-send-info" id="wa-send-info">
+        <strong>📸 جاري التحقق من إمكانية الإرسال...</strong>
       </div>
 
       <!-- PRODUCT FIELDS -->
@@ -931,7 +1037,7 @@
 
       <button class="btn-primary" onclick="submitUpload()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        نشر الإعلان عبر واتساب
+        نشر الإعلان
       </button>
     </div>
   </div>
@@ -939,34 +1045,78 @@
   <script>
     const WA_NUM = '201129724884';
     const MAX_IMAGES = 5;
-    let uploadedImages = []; // base64 data URLs
 
+    /* ====================================================
+       STORAGE — two parallel arrays for the same images:
+       uploadedPreviews : base64 data URLs  → for <img> preview
+       uploadedFiles    : File objects      → for Web Share API
+       ==================================================== */
+    let uploadedPreviews = [];
+    let uploadedFiles    = [];
+
+    /* ====================================================
+       DETECT WEB SHARE FILE SUPPORT
+       navigator.canShare({ files }) is the spec-correct
+       way to test file-sharing capability.
+       ==================================================== */
+    const canShareFiles = (() => {
+      try {
+        if (!navigator.share || !navigator.canShare) return false;
+        const testFile = new File([''], 'test.jpg', { type: 'image/jpeg' });
+        return navigator.canShare({ files: [testFile] });
+      } catch (_) { return false; }
+    })();
+
+    /* ====================================================
+       UPDATE WA-INFO BANNER based on Share API support
+       ==================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+      const infoEl = document.getElementById('wa-send-info');
+      if (canShareFiles) {
+        infoEl.innerHTML = `
+          <span class="share-badge">✅ إرسال تلقائي مدعوم</span>
+          <strong>📸 الصور تُرسل تلقائياً مع الرسالة</strong>
+          اضغط "نشر الإعلان" ← اختر واتساب من القائمة ← اضغط إرسال مرة واحدة فقط.`;
+      } else {
+        infoEl.innerHTML = `
+          <strong>📸 كيف ترسل الصور؟</strong>
+          بعد الضغط على "نشر الإعلان"، سيفتح واتساب برسالة البيانات.<br>
+          ابعت الصور في نفس المحادثة مباشرة — الإدارة هتتواصل معك لنشر إعلانك.`;
+      }
+    });
+
+    /* ====================================================
+       PRODUCT / WORKER DATA
+       ==================================================== */
     const products = [
-      { id:1, name:'كنبة 3+2+1 كلاسيك', price:8500, condition:'new', category:'صالة', type:'furniture', emoji:'🛋️', rating:4.8, reviews:12 },
-      { id:2, name:'غرفة نوم كاملة 4 قطع', price:15000, condition:'used', category:'غرف نوم', type:'furniture', emoji:'🛏️', rating:4.5, reviews:8 },
-      { id:3, name:'تكييف سبليت 1.5 حصان', price:12000, condition:'new', category:'تكييف', type:'appliances', emoji:'❄️', rating:4.9, reviews:21 },
-      { id:4, name:'غسالة أتوماتيك 7 كيلو', price:9500, condition:'used', category:'غسالة', type:'appliances', emoji:'🫧', rating:4.3, reviews:6 },
-      { id:5, name:'نجفة LED حديثة', price:1200, condition:'new', category:'إضاءة', type:'lighting', emoji:'💡', rating:4.7, reviews:15 },
-      { id:6, name:'طقم ستاير صالة', price:3500, condition:'new', category:'مفروشات', type:'furniture', emoji:'🪟', rating:4.6, reviews:9 },
-      { id:7, name:'ثلاجة 16 قدم نوفروست', price:11000, condition:'new', category:'ثلاجة', type:'appliances', emoji:'🧊', rating:4.8, reviews:17 },
-      { id:8, name:'مطبخ خشب 3 متر', price:22000, condition:'new', category:'مطبخ', type:'furniture', emoji:'🍳', rating:4.9, reviews:5 },
-      { id:9, name:'إضاءة ممر LED حديثة', price:850, condition:'new', category:'إضاءة', type:'lighting', emoji:'🔆', rating:4.4, reviews:11 },
-      { id:10, name:'تلفزيون 55 بوصة 4K', price:13500, condition:'used', category:'شاشات', type:'appliances', emoji:'📺', rating:4.7, reviews:14 }
+      { id:1,  name:'كنبة 3+2+1 كلاسيك',       price:8500,  condition:'new',  category:'صالة',    type:'furniture',  emoji:'🛋️', rating:4.8, reviews:12 },
+      { id:2,  name:'غرفة نوم كاملة 4 قطع',     price:15000, condition:'used', category:'غرف نوم', type:'furniture',  emoji:'🛏️', rating:4.5, reviews:8  },
+      { id:3,  name:'تكييف سبليت 1.5 حصان',     price:12000, condition:'new',  category:'تكييف',   type:'appliances', emoji:'❄️', rating:4.9, reviews:21 },
+      { id:4,  name:'غسالة أتوماتيك 7 كيلو',    price:9500,  condition:'used', category:'غسالة',   type:'appliances', emoji:'🫧', rating:4.3, reviews:6  },
+      { id:5,  name:'نجفة LED حديثة',            price:1200,  condition:'new',  category:'إضاءة',   type:'lighting',   emoji:'💡', rating:4.7, reviews:15 },
+      { id:6,  name:'طقم ستاير صالة',            price:3500,  condition:'new',  category:'مفروشات', type:'furniture',  emoji:'🪟', rating:4.6, reviews:9  },
+      { id:7,  name:'ثلاجة 16 قدم نوفروست',      price:11000, condition:'new',  category:'ثلاجة',   type:'appliances', emoji:'🧊', rating:4.8, reviews:17 },
+      { id:8,  name:'مطبخ خشب 3 متر',            price:22000, condition:'new',  category:'مطبخ',    type:'furniture',  emoji:'🍳', rating:4.9, reviews:5  },
+      { id:9,  name:'إضاءة ممر LED حديثة',       price:850,   condition:'new',  category:'إضاءة',   type:'lighting',   emoji:'🔆', rating:4.4, reviews:11 },
+      { id:10, name:'تلفزيون 55 بوصة 4K',        price:13500, condition:'used', category:'شاشات',   type:'appliances', emoji:'📺', rating:4.7, reviews:14 }
     ];
 
     const workers = [
-      { id:1, name:'أحمد سالم', trade:'كهرباء', initials:'أس', rating:4.9, reviews:38, phone:'01012345678' },
-      { id:2, name:'محمد رضا', trade:'سباكة', initials:'مر', rating:4.7, reviews:24, phone:'01123456789' },
-      { id:3, name:'عمرو فتحي', trade:'نجارة', initials:'عف', rating:4.8, reviews:31, phone:'01234567890' },
-      { id:4, name:'خالد حسن', trade:'تكييف', initials:'خح', rating:4.9, reviews:45, phone:'01098765432' },
-      { id:5, name:'سامي عبدالله', trade:'دهان', initials:'سع', rating:4.6, reviews:19, phone:'01187654321' },
-      { id:6, name:'طارق ماهر', trade:'سيراميك', initials:'طم', rating:4.8, reviews:27, phone:'01276543210' },
-      { id:7, name:'ياسر إبراهيم', trade:'كهرباء', initials:'يإ', rating:4.7, reviews:22, phone:'01365432109' },
-      { id:8, name:'نادر وليد', trade:'أعمال عامة', initials:'نو', rating:4.5, reviews:16, phone:'01054321098' }
+      { id:1, name:'أحمد سالم',    trade:'كهرباء',    initials:'أس', rating:4.9, reviews:38, phone:'01012345678' },
+      { id:2, name:'محمد رضا',     trade:'سباكة',     initials:'مر', rating:4.7, reviews:24, phone:'01123456789' },
+      { id:3, name:'عمرو فتحي',    trade:'نجارة',     initials:'عف', rating:4.8, reviews:31, phone:'01234567890' },
+      { id:4, name:'خالد حسن',     trade:'تكييف',     initials:'خح', rating:4.9, reviews:45, phone:'01098765432' },
+      { id:5, name:'سامي عبدالله', trade:'دهان',      initials:'سع', rating:4.6, reviews:19, phone:'01187654321' },
+      { id:6, name:'طارق ماهر',    trade:'سيراميك',   initials:'طم', rating:4.8, reviews:27, phone:'01276543210' },
+      { id:7, name:'ياسر إبراهيم', trade:'كهرباء',    initials:'يإ', rating:4.7, reviews:22, phone:'01365432109' },
+      { id:8, name:'نادر وليد',    trade:'أعمال عامة',initials:'نو', rating:4.5, reviews:16, phone:'01054321098' }
     ];
 
     const WA_SVG = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`;
 
+    /* ====================================================
+       CARD RENDERERS
+       ==================================================== */
     function makeProductCard(p) {
       const badge = p.condition === 'new' ? 'جديد' : 'مستعمل';
       const badgeClass = p.condition === 'new' ? 'badge-new' : 'badge-used';
@@ -994,7 +1144,7 @@
   </div>`;
     }
 
-    function makeWorkerCard(w, fullWidth) {
+    function makeWorkerCard(w) {
       const waMsg = encodeURIComponent(`مرحباً ${w.name}، رأيت إعلانك في منصة بيتك الجديد.\nأحتاج خدمة ${w.trade}.\nأرجو التواصل.`);
       const stars = '★'.repeat(Math.floor(w.rating));
       return `
@@ -1012,9 +1162,12 @@
   </div>`;
     }
 
+    /* ====================================================
+       INIT
+       ==================================================== */
     function init() {
-      document.getElementById('home-products').innerHTML = products.slice(0,6).map(makeProductCard).join('');
-      document.getElementById('home-workers').innerHTML = workers.slice(0,5).map(w => makeWorkerCard(w,false)).join('');
+      document.getElementById('home-products').innerHTML  = products.slice(0,6).map(makeProductCard).join('');
+      document.getElementById('home-workers').innerHTML   = workers.slice(0,5).map(makeWorkerCard).join('');
       renderFiltered('furniture','all');
       renderFiltered('appliances','all');
       renderFiltered('lighting','all');
@@ -1024,9 +1177,9 @@
     function renderFiltered(type, filter) {
       let f = products.filter(p => p.type === type);
       if (filter !== 'all') {
-        if (filter === 'new') f = f.filter(p => p.condition === 'new');
+        if      (filter === 'new')  f = f.filter(p => p.condition === 'new');
         else if (filter === 'used') f = f.filter(p => p.condition === 'used');
-        else f = f.filter(p => p.category === filter);
+        else                        f = f.filter(p => p.category  === filter);
       }
       const el = document.getElementById(type+'-products');
       if (el) el.innerHTML = f.length ? f.map(makeProductCard).join('') :
@@ -1035,11 +1188,13 @@
 
     function renderWorkers(filter) {
       let f = filter === 'all' ? workers : workers.filter(w => w.trade === filter);
-      document.getElementById('workers-grid').innerHTML = f.length ? f.map(w => makeWorkerCard(w,true)).join('') :
+      document.getElementById('workers-grid').innerHTML = f.length ? f.map(makeWorkerCard).join('') :
         `<div class="empty-state" style="grid-column:1/-1;"><div class="empty-icon">🔧</div><p>لا يوجد صنايعية في هذا التخصص</p></div>`;
     }
 
-    let currentPage = 'home';
+    /* ====================================================
+       NAVIGATION
+       ==================================================== */
     function showPage(page) {
       document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
       document.getElementById('page-'+page).classList.add('active');
@@ -1047,7 +1202,6 @@
       const map = { home:0, furniture:1, workers:2 };
       if (map[page] !== undefined) document.querySelectorAll('.nav-item')[map[page]].classList.add('active');
       window.scrollTo({ top:0, behavior:'instant' });
-      currentPage = page;
     }
 
     function filterCat(btn, filter, type) {
@@ -1062,6 +1216,9 @@
       renderWorkers(filter);
     }
 
+    /* ====================================================
+       LIVE SEARCH
+       ==================================================== */
     function liveSearch(q) {
       if (!q.trim()) {
         document.getElementById('home-products').innerHTML = products.slice(0,6).map(makeProductCard).join('');
@@ -1081,6 +1238,9 @@
         </div>`;
     }
 
+    /* ====================================================
+       SHEETS
+       ==================================================== */
     function openSheet(name) {
       document.getElementById('overlay-'+name).classList.add('open');
       document.body.style.overflow = 'hidden';
@@ -1093,39 +1253,46 @@
       if (e.target === document.getElementById('overlay-'+name)) closeSheet(name);
     }
 
+    /* ====================================================
+       REQUEST FORM → WHATSAPP
+       ==================================================== */
     function sendRequest() {
-      const type = document.getElementById('req-type').value;
+      const type    = document.getElementById('req-type').value;
       const details = document.getElementById('req-details').value;
-      const budget = document.getElementById('req-budget').value;
+      const budget  = document.getElementById('req-budget').value;
       if (!type || !details) { showToast('⚠️ يرجى ملء الحقول المطلوبة'); return; }
-      const msg = encodeURIComponent(`🎯 طلب جديد من بيتك الجديد\n\nنوع الطلب: ${type}\nالتفاصيل: ${details}${budget ? '\nالميزانية: ' + budget + ' جنيه' : ''}`);
+      const msg = encodeURIComponent(
+        `🎯 طلب جديد من بيتك الجديد\n\nنوع الطلب: ${type}\nالتفاصيل: ${details}` +
+        (budget ? `\nالميزانية: ${budget} جنيه` : '')
+      );
       window.open(`https://wa.me/${WA_NUM}?text=${msg}`, '_blank');
       closeSheet('request');
       showToast('✅ جاري فتح واتساب...');
     }
 
-    /* ====== UPLOAD TYPE ====== */
+    /* ====================================================
+       UPLOAD TYPE TOGGLE
+       ==================================================== */
     let uploadType = 'product';
     function setUploadType(btn, type) {
       document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
       btn.classList.add('active');
       uploadType = type;
       const isService = type === 'service';
-      document.getElementById('up-cat-group').style.display = isService ? 'none' : '';
-      document.getElementById('up-price-group').style.display = isService ? 'none' : '';
+      document.getElementById('up-cat-group').style.display       = isService ? 'none' : '';
+      document.getElementById('up-price-group').style.display     = isService ? 'none' : '';
       document.getElementById('up-condition-group').style.display = isService ? 'none' : '';
-      document.getElementById('up-trade-group').style.display = isService ? '' : 'none';
-      document.getElementById('up-exp-group').style.display = isService ? '' : 'none';
-      // Update upload zone label
-      const zone = document.getElementById('upload-img-zone');
-      zone.querySelector('.upload-label').textContent = isService
-        ? 'اضغط لرفع صورتك الشخصية أو أعمالك السابقة'
-        : 'اضغط لرفع صور المنتج';
+      document.getElementById('up-trade-group').style.display     = isService ? '' : 'none';
+      document.getElementById('up-exp-group').style.display       = isService ? '' : 'none';
+      document.getElementById('upload-img-zone').querySelector('.upload-label').textContent =
+        isService ? 'اضغط لرفع صورتك الشخصية أو أعمالك السابقة' : 'اضغط لرفع صور المنتج';
     }
 
-    /* ====== MULTI-IMAGE UPLOAD ====== */
+    /* ====================================================
+       IMAGE UPLOAD — keep File objects for Share API
+       ==================================================== */
     function triggerImgUpload() {
-      if (uploadedImages.length >= MAX_IMAGES) {
+      if (uploadedFiles.length >= MAX_IMAGES) {
         showToast(`⚠️ الحد الأقصى ${MAX_IMAGES} صور`);
         return;
       }
@@ -1135,139 +1302,185 @@
     function handleImgUpload(event) {
       const files = Array.from(event.target.files);
       if (!files.length) return;
-      const remaining = MAX_IMAGES - uploadedImages.length;
-      const toProcess = files.slice(0, remaining);
+      const remaining  = MAX_IMAGES - uploadedFiles.length;
+      const toProcess  = files.slice(0, remaining);
       if (files.length > remaining) showToast(`⚠️ تم اختيار أول ${remaining} صور فقط`);
+
       let loaded = 0;
       toProcess.forEach(file => {
         if (!file.type.startsWith('image/')) return;
+        uploadedFiles.push(file);               // keep File object for sharing
         const reader = new FileReader();
         reader.onload = (e) => {
-          uploadedImages.push(e.target.result);
+          uploadedPreviews.push(e.target.result); // base64 for preview only
           loaded++;
           if (loaded === toProcess.length) renderImagePreviews();
         };
         reader.readAsDataURL(file);
       });
-      event.target.value = ''; // allow re-selecting same file
+      event.target.value = ''; // allow re-selecting same files
     }
 
     function renderImagePreviews() {
-      const grid = document.getElementById('img-preview-grid');
-      const zone = document.getElementById('upload-img-zone');
+      const grid  = document.getElementById('img-preview-grid');
+      const zone  = document.getElementById('upload-img-zone');
       const label = document.getElementById('img-count-label');
-      if (uploadedImages.length === 0) {
+
+      if (uploadedPreviews.length === 0) {
         grid.style.display = 'none';
         zone.style.display = '';
         label.classList.remove('visible');
         return;
       }
+
       zone.style.display = 'none';
       grid.style.display = 'grid';
-      label.textContent = `✅ ${uploadedImages.length} صورة جاهزة للإرسال`;
+      const shareNote = canShareFiles ? ' (ستُرسل تلقائياً)' : '';
+      label.textContent = `✅ ${uploadedPreviews.length} صورة جاهزة${shareNote}`;
       label.classList.add('visible');
-      let html = uploadedImages.map((src, i) => `
+
+      let html = uploadedPreviews.map((src, i) => `
         <div class="img-preview-item">
           <img src="${src}" alt="صورة ${i+1}">
           <button class="remove-img-btn" onclick="removeImg(${i})">×</button>
         </div>`).join('');
-      if (uploadedImages.length < MAX_IMAGES) {
+
+      if (uploadedPreviews.length < MAX_IMAGES) {
         html += `<div class="img-preview-item add-more" onclick="triggerImgUpload()">+</div>`;
       }
       grid.innerHTML = html;
     }
 
     function removeImg(idx) {
-      uploadedImages.splice(idx, 1);
+      uploadedPreviews.splice(idx, 1);
+      uploadedFiles.splice(idx, 1);   // keep both arrays in sync
       renderImagePreviews();
     }
 
-    /* ====== SUBMIT UPLOAD ====== */
-    function submitUpload() {
-      const name = document.getElementById('up-name').value.trim();
-      const desc = document.getElementById('up-desc').value.trim();
-      const phone = document.getElementById('up-phone').value.trim();
-      if (!name) { showToast('⚠️ يرجى كتابة اسم المنتج أو الخدمة'); return; }
-      if (!phone) { showToast('⚠️ يرجى إدخال رقم الواتساب'); return; }
-
-      let msg = '';
-      const imgNote = uploadedImages.length > 0
-        ? `\n📸 الصور: سيتم إرسال ${uploadedImages.length} صورة في نفس المحادثة بعد هذه الرسالة`
-        : '';
-
+    /* ====================================================
+       BUILD TEXT MESSAGE
+       ==================================================== */
+    function buildUploadMessage(name, desc, phone) {
       if (uploadType === 'product') {
         const price = document.getElementById('up-price').value;
-        const cat = document.getElementById('up-cat').value;
-        const cond = document.getElementById('up-condition').value === 'new' ? 'جديد' : 'مستعمل';
-        msg = encodeURIComponent(
+        const cat   = document.getElementById('up-cat').value;
+        const cond  = document.getElementById('up-condition').value === 'new' ? 'جديد' : 'مستعمل';
+        return (
           `📦 إعلان جديد - بيتك الجديد\n` +
           `━━━━━━━━━━━━━━━\n` +
           `المنتج: ${name}\n` +
-          (cat ? `التصنيف: ${cat}\n` : '') +
+          (cat   ? `التصنيف: ${cat}\n`       : '') +
           `الحالة: ${cond}\n` +
           (price ? `السعر: ${price} جنيه\n` : '') +
-          (desc ? `الوصف: ${desc}\n` : '') +
-          `للتواصل: ${phone}` +
-          imgNote
+          (desc  ? `الوصف: ${desc}\n`        : '') +
+          `للتواصل: ${phone}`
         );
       } else {
         const trade = document.getElementById('up-trade').value;
-        const exp = document.getElementById('up-exp').value;
-        msg = encodeURIComponent(
+        const exp   = document.getElementById('up-exp').value;
+        return (
           `🔧 صنايعي / خدمة جديدة - بيتك الجديد\n` +
           `━━━━━━━━━━━━━━━\n` +
           `الاسم: ${name}\n` +
-          (trade ? `التخصص: ${trade}\n` : '') +
+          (trade ? `التخصص: ${trade}\n`     : '') +
           `سنوات الخبرة: ${exp}\n` +
-          (desc ? `نبذة: ${desc}\n` : '') +
-          `للتواصل: ${phone}` +
-          imgNote
+          (desc  ? `نبذة: ${desc}\n`        : '') +
+          `للتواصل: ${phone}`
         );
       }
+    }
 
-      const waUrl = `https://wa.me/${WA_NUM}?text=${msg}`;
+    /* ====================================================
+       SUBMIT UPLOAD
+       ─────────────────────────────────────────────────
+       FLOW A (mobile, Web Share API supported):
+         navigator.share({ files, text }) → native share sheet
+         → user picks WhatsApp → images + text sent in ONE tap.
+         WhatsApp shows images first, caption (text) below.
+
+       FLOW B (desktop / unsupported browser):
+         Opens wa.me URL with text, instructs user to send
+         images manually in the same conversation.
+       ==================================================== */
+    async function submitUpload() {
+      const name  = document.getElementById('up-name').value.trim();
+      const desc  = document.getElementById('up-desc').value.trim();
+      const phone = document.getElementById('up-phone').value.trim();
+
+      if (!name)  { showToast('⚠️ يرجى كتابة اسم المنتج أو الخدمة'); return; }
+      if (!phone) { showToast('⚠️ يرجى إدخال رقم الواتساب');         return; }
+
+      const msgText = buildUploadMessage(name, desc, phone);
+
+      /* ── FLOW A: Web Share API with files ────────────── */
+      if (uploadedFiles.length > 0 && canShareFiles) {
+        try {
+          await navigator.share({ files: uploadedFiles, text: msgText });
+          // If we reach here the share was successful (or silently dismissed)
+          showToast('✅ تم الإرسال بنجاح!');
+          setTimeout(() => { closeSheet('upload'); resetUploadForm(); }, 600);
+          return;
+        } catch (err) {
+          if (err.name === 'AbortError') {
+            // User cancelled the share sheet — do nothing
+            return;
+          }
+          // Any other error → fall through to Flow B
+        }
+      }
+
+      /* ── FLOW B: WhatsApp URL fallback ───────────────── */
+      const waUrl = `https://wa.me/${WA_NUM}?text=${encodeURIComponent(msgText)}`;
       window.open(waUrl, '_blank');
 
-      // Guide user to send images after
-      if (uploadedImages.length > 0) {
-        showToast(`✅ افتح واتساب وأرسل ${uploadedImages.length} صورة في نفس المحادثة`);
+      if (uploadedFiles.length > 0) {
+        showToast(`✅ افتح واتساب وابعت ${uploadedFiles.length} صورة في نفس المحادثة`);
       } else {
         showToast('✅ تم إرسال إعلانك بنجاح!');
       }
-      setTimeout(() => {
-        closeSheet('upload');
-        resetUploadForm();
-      }, 1200);
+      setTimeout(() => { closeSheet('upload'); resetUploadForm(); }, 1400);
     }
 
+    /* ====================================================
+       RESET UPLOAD FORM
+       ==================================================== */
     function resetUploadForm() {
-      uploadedImages = [];
+      uploadedPreviews = [];
+      uploadedFiles    = [];
       renderImagePreviews();
-      document.getElementById('up-name').value = '';
-      document.getElementById('up-desc').value = '';
-      document.getElementById('up-phone').value = '';
-      document.getElementById('up-price').value = '';
+      ['up-name','up-desc','up-phone','up-price'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
       document.getElementById('img-file-input').value = '';
     }
 
-    /* ====== DRAG & DROP ====== */
+    /* ====================================================
+       DRAG & DROP — also capture File objects
+       ==================================================== */
     const uploadZone = document.getElementById('upload-img-zone');
-    uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
-    uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+    uploadZone.addEventListener('dragover',  e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+    uploadZone.addEventListener('dragleave', ()  => uploadZone.classList.remove('drag-over'));
     uploadZone.addEventListener('drop', e => {
       e.preventDefault();
       uploadZone.classList.remove('drag-over');
       const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
       if (!files.length) return;
-      const remaining = MAX_IMAGES - uploadedImages.length;
+      const remaining = MAX_IMAGES - uploadedFiles.length;
+      if (remaining <= 0) { showToast(`⚠️ الحد الأقصى ${MAX_IMAGES} صور`); return; }
       files.slice(0, remaining).forEach(file => {
+        uploadedFiles.push(file);                   // File object
         const reader = new FileReader();
-        reader.onload = ev => { uploadedImages.push(ev.target.result); renderImagePreviews(); };
+        reader.onload = ev => {
+          uploadedPreviews.push(ev.target.result);  // base64 preview
+          renderImagePreviews();
+        };
         reader.readAsDataURL(file);
       });
     });
 
-    /* ====== TOAST ====== */
+    /* ====================================================
+       TOAST
+       ==================================================== */
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.textContent = msg;
@@ -1276,6 +1489,7 @@
       t._timer = setTimeout(() => t.classList.remove('show'), 2800);
     }
 
+    /* ── INIT ── */
     init();
   </script>
 </body>
