@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
@@ -28,14 +28,6 @@
       --whatsapp: #25d366;
       --transition: 0.22s cubic-bezier(.4,0,.2,1);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
-
-      /* ===== FORM INPUT COLORS (explicit, no inheritance issues) ===== */
-      --input-bg: #ffffff;
-      --input-text: #1a2e22;
-      --input-placeholder: #8aab95;
-      --input-border: rgba(26,107,74,0.2);
-      --input-border-focus: #2d9968;
-      --input-bg-focus: #ffffff;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -49,6 +41,41 @@
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 10px; }
+
+    /* ====== REVEAL ANIMATION SYSTEM ====== */
+    [data-anim] {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.55s cubic-bezier(.22,.68,0,1.2),
+                  transform 0.55s cubic-bezier(.22,.68,0,1.2);
+    }
+    [data-anim].anim-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    [data-anim-scale] {
+      opacity: 0;
+      transform: scale(0.9) translateY(14px);
+      transition: opacity 0.5s ease, transform 0.5s cubic-bezier(.34,1.4,.64,1);
+    }
+    [data-anim-scale].anim-visible {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+    [data-anim-left] {
+      opacity: 0;
+      transform: translateX(20px);
+      transition: opacity 0.5s ease, transform 0.5s cubic-bezier(.22,.68,0,1.2);
+    }
+    [data-anim-left].anim-visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* PAGE TRANSITION */
+    .page-view { display: none; }
+    .page-view.active { display: block; animation: pageFadeIn 0.3s ease; }
+    @keyframes pageFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
     /* ====== HEADER ====== */
     header {
@@ -105,18 +132,13 @@
       border: none;
       font-family: 'Cairo', sans-serif;
       font-size: clamp(13px,3.5vw,15px);
-      /* Always white background, always dark text — no mode issues */
       background: #ffffff;
       color: #1a2e22;
       outline: none;
       box-shadow: 0 4px 20px rgba(0,0,0,0.13);
       transition: var(--transition);
     }
-    .search-input:focus {
-      background: #ffffff;
-      color: #1a2e22;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
-    }
+    .search-input:focus { background: #ffffff; color: #1a2e22; box-shadow: 0 4px 24px rgba(0,0,0,0.18); }
     .search-input::placeholder { color: #8aab95; }
     .search-btn {
       position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
@@ -137,22 +159,11 @@
       position: relative;
       overflow: hidden;
     }
-    .hero-banner::before {
-      content: ''; position: absolute; top: -50px; right: -50px;
-      width: 200px; height: 200px; background: rgba(255,255,255,0.05); border-radius: 50%;
-    }
-    .hero-banner::after {
-      content: ''; position: absolute; bottom: -40px; left: -40px;
-      width: 160px; height: 160px; background: rgba(255,255,255,0.05); border-radius: 50%;
-    }
+    .hero-banner::before { content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255,255,255,0.05); border-radius: 50%; }
+    .hero-banner::after  { content: ''; position: absolute; bottom: -40px; left: -40px; width: 160px; height: 160px; background: rgba(255,255,255,0.05); border-radius: 50%; }
     .hero-banner h2 { font-size: clamp(18px,5vw,26px); font-weight: 900; margin-bottom: 8px; position: relative; }
-    .hero-banner p {
-      font-size: clamp(12px,3vw,14px); opacity: 0.85;
-      max-width: 340px; margin: 0 auto 20px;
-      line-height: 1.7; position: relative;
-    }
+    .hero-banner p { font-size: clamp(12px,3vw,14px); opacity: 0.85; max-width: 340px; margin: 0 auto 20px; line-height: 1.7; position: relative; }
     .hero-stats { display: flex; justify-content: center; gap: clamp(16px,5vw,32px); position: relative; flex-wrap: wrap; }
-    .hero-stat { text-align: center; }
     .hero-stat .num { font-size: clamp(20px,5vw,26px); font-weight: 900; color: var(--accent-light); display: block; line-height: 1; }
     .hero-stat .label { font-size: clamp(10px,2.5vw,12px); opacity: 0.8; margin-top: 3px; }
 
@@ -162,10 +173,10 @@
     .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
     .section-title { display: flex; align-items: center; gap: 8px; font-size: clamp(15px,4vw,17px); font-weight: 700; color: var(--text); }
     .section-icon { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-    .section-icon.green { background: #e8f5e9; color: var(--primary); }
-    .section-icon.amber { background: #fff8e1; color: #f0a500; }
-    .section-icon.blue { background: #e3f2fd; color: #1976d2; }
-    .section-icon.red { background: #fce4ec; color: #c62828; }
+    .section-icon.green  { background: #e8f5e9; color: var(--primary); }
+    .section-icon.amber  { background: #fff8e1; color: #f0a500; }
+    .section-icon.blue   { background: #e3f2fd; color: #1976d2; }
+    .section-icon.red    { background: #fce4ec; color: #c62828; }
     .section-icon.purple { background: #f3e5f5; color: #7b1fa2; }
     .see-all {
       font-size: 13px; color: var(--primary-light); text-decoration: none;
@@ -186,18 +197,34 @@
       display: flex; flex-direction: column; align-items: center; gap: 6px;
       box-shadow: var(--shadow);
     }
-    .quick-card:hover, .quick-card:active { border-color: var(--primary-light); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-    .quick-card .qc-icon {
-      width: clamp(40px,10vw,48px); height: clamp(40px,10vw,48px);
-      border-radius: 14px; display: flex; align-items: center; justify-content: center;
-      font-size: clamp(20px,5vw,26px); transition: var(--transition);
-    }
-    .quick-card:hover .qc-icon { transform: scale(1.1); }
+    .quick-card:hover, .quick-card:active { border-color: var(--primary-light); transform: translateY(-3px) scale(1.03); box-shadow: var(--shadow-lg); }
+    .quick-card .qc-icon { width: clamp(40px,10vw,48px); height: clamp(40px,10vw,48px); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: clamp(20px,5vw,26px); transition: var(--transition); }
+    .quick-card:hover .qc-icon { transform: scale(1.12) rotate(-4deg); }
     .quick-card span { font-size: clamp(10px,2.5vw,12px); font-weight: 600; color: var(--text); line-height: 1.3; }
+
+    /* ====== PROMO GRID (replaces scroll) ====== */
+    .promo-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 420px) { .promo-grid { grid-template-columns: 1fr 1fr; } }
+    @media (min-width: 700px) { .promo-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .promo-card {
+      border-radius: var(--radius); padding: clamp(14px,4vw,20px);
+      position: relative; overflow: hidden; cursor: pointer; transition: var(--transition);
+    }
+    .promo-card:hover { transform: translateY(-4px) scale(1.01); box-shadow: var(--shadow-lg); }
+    .promo-card.p1 { background: linear-gradient(135deg,#1a6b4a,#2d9968); color: #fff; }
+    .promo-card.p2 { background: linear-gradient(135deg,#1565c0,#1976d2); color: #fff; }
+    .promo-card.p3 { background: linear-gradient(135deg,#6a1b9a,#8e24aa); color: #fff; }
+    .promo-card h3 { font-size: clamp(14px,4vw,16px); font-weight: 800; margin-bottom: 4px; position: relative; z-index: 1; }
+    .promo-card p  { font-size: clamp(11px,2.8vw,13px); opacity: 0.85; position: relative; z-index: 1; }
+    .promo-emoji { font-size: clamp(38px,10vw,52px); position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.22; }
 
     /* ====== PRODUCTS GRID ====== */
     .products-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: clamp(10px,3vw,14px); }
-    @media (min-width:480px) { .products-grid { grid-template-columns: repeat(2,1fr); } }
     @media (min-width:640px) { .products-grid { grid-template-columns: repeat(3,1fr); } }
     @media (min-width:860px) { .products-grid { grid-template-columns: repeat(4,1fr); } }
 
@@ -207,48 +234,21 @@
       cursor: pointer; transition: var(--transition); position: relative;
       display: flex; flex-direction: column;
     }
-    .product-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: rgba(26,107,74,0.22); }
-
+    .product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: rgba(26,107,74,0.28); }
     .product-img-wrap { position: relative; overflow: hidden; }
-    .product-img { width: 100%; height: clamp(110px,25vw,150px); object-fit: cover; display: block; background: var(--surface2); }
-    .product-img-placeholder {
-      width: 100%; height: clamp(110px,25vw,150px);
-      display: flex; align-items: center; justify-content: center;
-      font-size: clamp(36px,10vw,52px);
-      background: linear-gradient(135deg, var(--surface2), #ddeedd);
-    }
-    .img-count-badge {
-      position: absolute; bottom: 6px; right: 6px;
-      background: rgba(0,0,0,0.55); color: #fff;
-      font-size: 10px; font-weight: 700;
-      padding: 3px 7px; border-radius: 20px;
-      font-family: 'Cairo', sans-serif;
-      display: none;
-    }
-    .product-card:has(.product-imgs-preview) .img-count-badge { display: block; }
-
+    .product-img { width: 100%; height: clamp(110px,25vw,150px); object-fit: cover; display: block; background: var(--surface2); transition: transform 0.4s ease; }
+    .product-card:hover .product-img { transform: scale(1.05); }
+    .product-img-placeholder { width: 100%; height: clamp(110px,25vw,150px); display: flex; align-items: center; justify-content: center; font-size: clamp(36px,10vw,52px); background: linear-gradient(135deg, var(--surface2), #ddeedd); transition: transform 0.4s ease; }
+    .product-card:hover .product-img-placeholder { transform: scale(1.08); }
     .product-body { padding: clamp(10px,3vw,13px); flex: 1; }
-    .product-badge {
-      display: inline-block; font-size: clamp(9px,2.2vw,11px);
-      padding: 3px 8px; border-radius: 20px; font-weight: 700; margin-bottom: 5px;
-    }
-    .badge-new { background: #e8f5e9; color: #2e7d32; }
+    .product-badge { display: inline-block; font-size: clamp(9px,2.2vw,11px); padding: 3px 8px; border-radius: 20px; font-weight: 700; margin-bottom: 5px; }
+    .badge-new  { background: #e8f5e9; color: #2e7d32; }
     .badge-used { background: #fff8e1; color: #f57f17; }
     .badge-service { background: #e3f2fd; color: #1565c0; }
-    .product-name {
-      font-size: clamp(12px,3vw,14px); font-weight: 700;
-      margin-bottom: 4px; line-height: 1.4; color: var(--text);
-      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-    }
+    .product-name { font-size: clamp(12px,3vw,14px); font-weight: 700; margin-bottom: 4px; line-height: 1.4; color: var(--text); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .product-price { font-size: clamp(14px,4vw,16px); font-weight: 900; color: var(--primary); }
     .product-price span { font-size: 11px; font-weight: 400; color: var(--text-muted); }
-
-    .product-footer {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 8px clamp(10px,3vw,13px);
-      border-top: 1px solid var(--border); background: #fafff8;
-      margin-top: auto;
-    }
+    .product-footer { display: flex; align-items: center; justify-content: space-between; padding: 8px clamp(10px,3vw,13px); border-top: 1px solid var(--border); background: #fafff8; margin-top: auto; }
     .product-rating { display: flex; align-items: center; gap: 3px; font-size: 11px; color: var(--text-muted); }
     .rating-stars { color: #f0a500; font-size: 11px; }
     .btn-wa-product {
@@ -259,11 +259,17 @@
       font-family: 'Cairo', sans-serif; cursor: pointer;
       transition: var(--transition); text-decoration: none; white-space: nowrap;
     }
-    .btn-wa-product:hover { background: #1da851; transform: scale(1.04); }
+    .btn-wa-product:hover { background: #1da851; transform: scale(1.06); }
 
-    /* ====== WORKERS ====== */
-    .workers-scroll { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
-    .workers-scroll::-webkit-scrollbar { display: none; }
+    /* ====== WORKERS GRID ====== */
+    .home-workers-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    @media (min-width: 480px) { .home-workers-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 700px) { .home-workers-grid { grid-template-columns: repeat(4, 1fr); } }
+
     .workers-grid-full { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; }
     @media (min-width:480px) { .workers-grid-full { grid-template-columns: repeat(2,1fr); } }
     @media (min-width:640px) { .workers-grid-full { grid-template-columns: repeat(3,1fr); } }
@@ -275,21 +281,11 @@
       border: 1px solid var(--border); box-shadow: var(--shadow);
       text-align: center; cursor: pointer; transition: var(--transition);
     }
-    .workers-scroll .worker-card { min-width: clamp(145px,42vw,170px); max-width: 170px; flex-shrink: 0; }
-    .worker-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: rgba(26,107,74,0.28); }
-
-    .worker-avatar {
-      width: clamp(50px,12vw,62px); height: clamp(50px,12vw,62px);
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary), var(--primary-light));
-      display: flex; align-items: center; justify-content: center;
-      color: #fff; margin: 0 auto 10px;
-      font-weight: 700; font-size: clamp(17px,4.5vw,22px);
-      border: 3px solid var(--surface2);
-      overflow: hidden;
-    }
+    .worker-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: rgba(26,107,74,0.28); }
+    .worker-avatar { width: clamp(50px,12vw,62px); height: clamp(50px,12vw,62px); border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--primary-light)); display: flex; align-items: center; justify-content: center; color: #fff; margin: 0 auto 10px; font-weight: 700; font-size: clamp(17px,4.5vw,22px); border: 3px solid var(--surface2); overflow: hidden; transition: transform 0.3s ease; }
+    .worker-card:hover .worker-avatar { transform: scale(1.08); }
     .worker-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-    .worker-name { font-size: clamp(12px,3vw,14px); font-weight: 700; margin-bottom: 3px; }
+    .worker-name  { font-size: clamp(12px,3vw,14px); font-weight: 700; margin-bottom: 3px; }
     .worker-trade { font-size: clamp(10px,2.5vw,12px); color: var(--text-muted); margin-bottom: 8px; }
     .worker-rating { display: flex; align-items: center; justify-content: center; gap: 4px; font-size: 11px; margin-bottom: 10px; color: var(--text-muted); }
     .btn-wa-sm {
@@ -299,7 +295,7 @@
       font-family: 'Cairo', sans-serif; cursor: pointer; width: 100%;
       transition: var(--transition); text-decoration: none;
     }
-    .btn-wa-sm:hover { background: #1da851; }
+    .btn-wa-sm:hover { background: #1da851; transform: scale(1.03); }
 
     /* ====== REQUEST CARD ====== */
     .request-card {
@@ -308,14 +304,9 @@
       border-radius: var(--radius); padding: clamp(16px,4vw,22px) clamp(14px,4vw,20px);
       text-align: center;
     }
-    .request-icon {
-      width: 56px; height: 56px;
-      background: linear-gradient(135deg, #fff8e1, #ffecb3);
-      border-radius: 18px; display: flex; align-items: center; justify-content: center;
-      font-size: 28px; margin: 0 auto 12px;
-    }
+    .request-icon { width: 56px; height: 56px; background: linear-gradient(135deg, #fff8e1, #ffecb3); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 12px; }
     .request-card h3 { font-size: clamp(14px,4vw,16px); font-weight: 800; margin-bottom: 6px; color: var(--text); }
-    .request-card p { font-size: clamp(12px,3vw,13px); color: var(--text-muted); margin-bottom: 16px; line-height: 1.6; }
+    .request-card p  { font-size: clamp(12px,3vw,13px); color: var(--text-muted); margin-bottom: 16px; line-height: 1.6; }
     .btn-request {
       display: inline-flex; align-items: center; gap: 8px;
       background: var(--whatsapp); color: #fff; border: none;
@@ -348,10 +339,7 @@
       white-space: nowrap; opacity: 0; transition: var(--transition);
       pointer-events: none; z-index: 1999;
     }
-    .fab-wa-tooltip::after {
-      content: ''; position: absolute; right: 100%; top: 50%; transform: translateY(-50%);
-      border: 6px solid transparent; border-right-color: #1a2e22;
-    }
+    .fab-wa-tooltip::after { content: ''; position: absolute; right: 100%; top: 50%; transform: translateY(-50%); border: 6px solid transparent; border-right-color: #1a2e22; }
     body:has(.fab-wa:hover) .fab-wa-tooltip { opacity: 1; }
 
     /* ====== BOTTOM NAV ====== */
@@ -370,10 +358,11 @@
       flex: 1; min-width: 0;
     }
     .nav-item:hover { background: var(--surface2); }
-    .nav-item.active .nav-icon { color: var(--primary); }
+    .nav-item.active .nav-icon  { color: var(--primary); }
     .nav-item.active .nav-label { color: var(--primary); }
-    .nav-icon { font-size: clamp(20px,5vw,23px); color: var(--text-muted); transition: var(--transition); line-height: 1; }
+    .nav-icon  { font-size: clamp(20px,5vw,23px); color: var(--text-muted); transition: var(--transition); line-height: 1; }
     .nav-label { font-size: clamp(9px,2.2vw,11px); color: var(--text-muted); font-weight: 600; white-space: nowrap; }
+    .nav-item.active .nav-icon { transform: scale(1.12); }
 
     /* ====== OVERLAY / SHEETS ====== */
     .overlay {
@@ -391,14 +380,12 @@
     }
     @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
     .sheet-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
-    .sheet-title { font-size: clamp(16px,4vw,18px); font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .sheet-title   { font-size: clamp(16px,4vw,18px); font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
     .sheet-content { font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; }
 
-    /* ====== FORM — FULL COLOR RESET ====== */
-    /* All form controls use explicit, non-inherited colors so they
-       look correct in both light and dark mode at every state        */
-    .form-group { margin-bottom: 13px; }
-    .form-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; color: var(--text); }
+    /* ====== FORM ====== */
+    .form-group  { margin-bottom: 13px; }
+    .form-label  { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; color: var(--text); }
 
     .form-input,
     .form-select,
@@ -409,37 +396,21 @@
       border-radius: var(--radius-sm);
       font-family: 'Cairo', sans-serif;
       font-size: 14px;
-      /* Explicit colors — never inherit mode-dependent vars for bg/text */
       background-color: #ffffff;
       color: #1a2e22;
       outline: none;
       transition: var(--transition);
-      -webkit-text-fill-color: #1a2e22; /* overrides Safari autofill tint */
+      -webkit-text-fill-color: #1a2e22;
       caret-color: var(--primary);
     }
-
-    .form-input::placeholder,
-    .form-textarea::placeholder {
-      color: #8aab95;
-      -webkit-text-fill-color: #8aab95;
-    }
-
-    .form-select option {
-      background: #ffffff;
-      color: #1a2e22;
-    }
-
-    .form-input:focus,
-    .form-select:focus,
-    .form-textarea:focus {
+    .form-input::placeholder, .form-textarea::placeholder { color: #8aab95; -webkit-text-fill-color: #8aab95; }
+    .form-select option { background: #ffffff; color: #1a2e22; }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
       border-color: var(--primary-light);
-      background-color: #ffffff;
-      color: #1a2e22;
+      background-color: #ffffff; color: #1a2e22;
       -webkit-text-fill-color: #1a2e22;
       box-shadow: 0 0 0 3px rgba(45,153,104,0.14);
     }
-
-    /* Autofill overrides (Chrome fills inputs with blue tint) */
     .form-input:-webkit-autofill,
     .form-input:-webkit-autofill:hover,
     .form-input:-webkit-autofill:focus,
@@ -448,7 +419,6 @@
       -webkit-text-fill-color: #1a2e22 !important;
       caret-color: #1a2e22;
     }
-
     .form-textarea { min-height: 90px; resize: none; }
 
     .btn-primary {
@@ -469,10 +439,11 @@
     .btn-close-sheet:hover { background: #fce4ec; color: #c62828; }
 
     /* ====== PAGE VIEWS ====== */
-    .page-view { display: none; }
-    .page-view.active { display: block; }
-    .cat-filter { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; margin-bottom: 16px; }
-    .cat-filter::-webkit-scrollbar { display: none; }
+    .cat-filter {
+      display: flex; gap: 8px;
+      flex-wrap: wrap;          /* ALL CHIPS VISIBLE — no horizontal scroll */
+      margin-bottom: 16px;
+    }
     .filter-chip {
       flex-shrink: 0; padding: 7px 14px; border-radius: 20px;
       border: 1.5px solid var(--border); background: var(--surface);
@@ -481,51 +452,6 @@
       font-family: 'Cairo', sans-serif;
     }
     .filter-chip.active, .filter-chip:hover { background: var(--primary); border-color: var(--primary); color: #fff; }
-
-    /* ====== PROMO BANNERS ====== */
-    .promo-scroll { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
-    .promo-scroll::-webkit-scrollbar { display: none; }
-    .promo-card {
-      flex-shrink: 0; width: clamp(220px, 72vw, 320px);
-      border-radius: var(--radius); padding: clamp(14px,4vw,20px) clamp(14px,4vw,20px);
-      position: relative; overflow: hidden; cursor: pointer; transition: var(--transition);
-    }
-    .promo-card:hover { transform: scale(1.01); }
-    .promo-card.p1 { background: linear-gradient(135deg,#1a6b4a,#2d9968); color: #fff; }
-    .promo-card.p2 { background: linear-gradient(135deg,#1565c0,#1976d2); color: #fff; }
-    .promo-card.p3 { background: linear-gradient(135deg,#6a1b9a,#8e24aa); color: #fff; }
-    .promo-card h3 { font-size: clamp(14px,4vw,16px); font-weight: 800; margin-bottom: 4px; }
-    .promo-card p { font-size: clamp(11px,2.8vw,13px); opacity: 0.85; }
-    .promo-emoji { font-size: clamp(38px,10vw,52px); position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.22; }
-
-    /* ====== TOAST ====== */
-    .toast {
-      position: fixed; bottom: calc(88px + var(--safe-bottom)); left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: #1a2e22; color: #fff; padding: 12px 22px;
-      border-radius: 30px; font-size: 13px; font-weight: 600;
-      font-family: 'Cairo', sans-serif; z-index: 9000;
-      opacity: 0; transition: all 0.3s ease;
-      pointer-events: none; white-space: nowrap; max-width: 90vw; text-align: center;
-    }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* ====== PAGE HEADER ====== */
-    .page-header {
-      display: flex; align-items: center; gap: 12px;
-      padding: clamp(12px,3vw,16px) clamp(14px,4vw,20px);
-      background: var(--surface); border-bottom: 1px solid var(--border);
-      position: sticky; top: 0; z-index: 800;
-    }
-    .back-btn {
-      width: 36px; height: 36px; border-radius: 10px;
-      border: 1px solid var(--border); background: var(--bg);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; color: var(--text); cursor: pointer;
-      transition: var(--transition); flex-shrink: 0;
-    }
-    .back-btn:hover { background: var(--surface2); }
-    .page-header h2 { font-size: clamp(14px,4vw,17px); font-weight: 800; }
 
     /* ====== UPLOAD TYPE TABS ====== */
     .type-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
@@ -545,45 +471,22 @@
       text-align: center; cursor: pointer; transition: var(--transition);
       background: var(--bg); margin-bottom: 16px;
     }
-    .img-upload-zone:hover, .img-upload-zone.drag-over {
-      border-color: var(--primary-light); background: var(--surface2);
-    }
+    .img-upload-zone:hover, .img-upload-zone.drag-over { border-color: var(--primary-light); background: var(--surface2); }
     .img-upload-zone i { font-size: 36px; color: var(--text-muted); display: block; margin-bottom: 6px; }
     .img-upload-zone .upload-label { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 3px; }
-    .img-upload-zone .upload-hint { font-size: 11px; color: #9ab; }
+    .img-upload-zone .upload-hint  { font-size: 11px; color: #9ab; }
     #img-file-input { display: none; }
 
-    .img-preview-grid {
-      display: grid; grid-template-columns: repeat(3,1fr); gap: 8px;
-      margin-bottom: 14px; min-height: 0;
-    }
-    .img-preview-item {
-      position: relative; aspect-ratio: 1;
-      border-radius: 10px; overflow: hidden;
-      border: 1.5px solid var(--border); background: var(--surface2);
-    }
+    .img-preview-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 14px; min-height: 0; }
+    .img-preview-item { position: relative; aspect-ratio: 1; border-radius: 10px; overflow: hidden; border: 1.5px solid var(--border); background: var(--surface2); }
     .img-preview-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .img-preview-item.add-more {
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; border-style: dashed; font-size: 28px; color: var(--text-muted);
-      transition: var(--transition);
-    }
+    .img-preview-item.add-more { display: flex; align-items: center; justify-content: center; cursor: pointer; border-style: dashed; font-size: 28px; color: var(--text-muted); transition: var(--transition); }
     .img-preview-item.add-more:hover { border-color: var(--primary-light); background: var(--surface2); color: var(--primary); }
-    .remove-img-btn {
-      position: absolute; top: 4px; right: 4px;
-      width: 22px; height: 22px; background: rgba(0,0,0,0.6);
-      color: #fff; border: none; border-radius: 50%;
-      font-size: 14px; cursor: pointer; display: flex;
-      align-items: center; justify-content: center;
-      line-height: 1; font-family: 'Cairo', sans-serif;
-    }
-    .img-count-label {
-      font-size: 12px; color: var(--primary); font-weight: 600; text-align: center;
-      margin-bottom: 12px; display: none;
-    }
+    .remove-img-btn { position: absolute; top: 4px; right: 4px; width: 22px; height: 22px; background: rgba(0,0,0,0.6); color: #fff; border: none; border-radius: 50%; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; font-family: 'Cairo', sans-serif; }
+    .img-count-label { font-size: 12px; color: var(--primary); font-weight: 600; text-align: center; margin-bottom: 12px; display: none; }
     .img-count-label.visible { display: block; }
 
-    /* ====== WHATSAPP SEND INFO ====== */
+    /* ====== WA INFO ====== */
     .wa-send-info {
       background: #f0fff6; border: 1px solid rgba(37,211,102,0.25);
       border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 14px;
@@ -591,96 +494,83 @@
     }
     .wa-send-info strong { display: block; font-size: 13px; margin-bottom: 3px; }
 
-    /* Share API supported badge */
-    .share-badge {
-      display: inline-flex; align-items: center; gap: 5px;
-      background: #e8f5e9; color: #2e7d32;
-      border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700;
-      margin-bottom: 6px;
-    }
-
     /* ====== SMALL UTILS ====== */
     .divider { height: 1px; background: var(--border); margin: 16px 0; }
     .empty-state { grid-column: 1/-1; text-align: center; padding: clamp(24px,6vw,36px) 20px; color: var(--text-muted); }
     .empty-state .empty-icon { font-size: 42px; margin-bottom: 10px; }
     .empty-state p { font-size: 14px; }
 
-    /* ====== RESPONSIVE TWEAKS ====== */
+    /* ====== PAGE HEADER ====== */
+    .page-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: clamp(12px,3vw,16px) clamp(14px,4vw,20px);
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 800;
+    }
+    .back-btn {
+      width: 36px; height: 36px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; color: var(--text); cursor: pointer;
+      transition: var(--transition); flex-shrink: 0;
+    }
+    .back-btn:hover { background: var(--surface2); }
+    .page-header h2 { font-size: clamp(14px,4vw,17px); font-weight: 800; }
+
+    /* ====== TOAST ====== */
+    .toast {
+      position: fixed; bottom: calc(88px + var(--safe-bottom)); left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1a2e22; color: #fff; padding: 12px 22px;
+      border-radius: 30px; font-size: 13px; font-weight: 600;
+      font-family: 'Cairo', sans-serif; z-index: 9000;
+      opacity: 0; transition: all 0.3s ease;
+      pointer-events: none; white-space: nowrap; max-width: 90vw; text-align: center;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ====== RESPONSIVE ====== */
     @media (max-width: 360px) {
       .quick-grid { grid-template-columns: repeat(4,1fr); gap: 6px; }
       .quick-card { padding: 10px 3px; }
       .quick-card .qc-icon { width: 36px; height: 36px; font-size: 18px; }
       .nav-label { font-size: 8.5px; }
     }
-    @media (min-width: 768px) {
-      .workers-scroll .worker-card { min-width: 190px; max-width: 190px; }
-    }
 
     /* ====== DARK MODE ====== */
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #0f1f16;
-        --surface: #1a2e22;
-        --surface2: #1e3428;
-        --text: #e8f5e9;
-        --text-muted: #7ab890;
+        --bg: #0f1f16; --surface: #1a2e22; --surface2: #1e3428;
+        --text: #e8f5e9; --text-muted: #7ab890;
         --border: rgba(45,153,104,0.18);
-        --shadow: 0 2px 12px rgba(0,0,0,0.3);
-        --shadow-lg: 0 8px 28px rgba(0,0,0,0.4);
+        --shadow: 0 2px 12px rgba(0,0,0,0.3); --shadow-lg: 0 8px 28px rgba(0,0,0,0.4);
       }
       .product-footer { background: #182b1f; }
-
-      /* Form fields in dark mode — keep white/light bg with dark text */
-      /* for readability. Use a slightly tinted white so it doesn't
-         clash too hard with the dark sheet background.             */
-      .form-input,
-      .form-select,
-      .form-textarea {
-        background-color: #f0faf3;
-        color: #1a2e22;
-        border-color: rgba(45,153,104,0.3);
-        -webkit-text-fill-color: #1a2e22;
+      .form-input, .form-select, .form-textarea {
+        background-color: #f0faf3; color: #1a2e22;
+        border-color: rgba(45,153,104,0.3); -webkit-text-fill-color: #1a2e22;
       }
-      .form-input::placeholder,
-      .form-textarea::placeholder {
-        color: #7a9f88;
-        -webkit-text-fill-color: #7a9f88;
+      .form-input::placeholder, .form-textarea::placeholder { color: #7a9f88; -webkit-text-fill-color: #7a9f88; }
+      .form-select option { background: #f0faf3; color: #1a2e22; }
+      .form-input:focus, .form-select:focus, .form-textarea:focus {
+        background-color: #ffffff; color: #1a2e22; -webkit-text-fill-color: #1a2e22;
+        border-color: var(--primary-light); box-shadow: 0 0 0 3px rgba(45,153,104,0.2);
       }
-      .form-select option {
-        background: #f0faf3;
-        color: #1a2e22;
-      }
-      .form-input:focus,
-      .form-select:focus,
-      .form-textarea:focus {
-        background-color: #ffffff;
-        color: #1a2e22;
-        -webkit-text-fill-color: #1a2e22;
-        border-color: var(--primary-light);
-        box-shadow: 0 0 0 3px rgba(45,153,104,0.2);
-      }
-      .wa-send-info {
-        background: rgba(37,211,102,0.08);
-        color: #7ab890;
-        border-color: rgba(37,211,102,0.18);
-      }
+      .wa-send-info { background: rgba(37,211,102,0.08); color: #7ab890; border-color: rgba(37,211,102,0.18); }
     }
   </style>
 </head>
 <body>
 
-  <!-- ====== TOAST ====== -->
   <div class="toast" id="toast"></div>
 
-  <!-- ====== FLOATING WA ====== -->
+  <!-- FAB -->
   <a class="fab-wa" href="https://wa.me/201129724884?text=مرحباً%2C%20أحتاج%20مساعدة%20في%20بيتي%20الجديد" target="_blank" aria-label="تواصل عبر واتساب">
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-    </svg>
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
   </a>
   <div class="fab-wa-tooltip">تواصل معنا الآن</div>
 
-  <!-- ====== BOTTOM NAV ====== -->
+  <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
     <button class="nav-item active" onclick="showPage('home')">
       <i class="ti ti-home nav-icon"></i>
@@ -733,20 +623,20 @@
     </header>
 
     <div class="main">
-      <!-- PROMO -->
+      <!-- PROMO GRID -->
       <div class="section" style="margin-top:16px;">
-        <div class="promo-scroll">
-          <div class="promo-card p1" onclick="showPage('furniture')">
+        <div class="promo-grid" id="promo-grid">
+          <div class="promo-card p1" data-anim onclick="showPage('furniture')">
             <div class="promo-emoji">🛋️</div>
             <h3>أثاث جديد ومستعمل</h3>
             <p>أفضل الأسعار لساكني المجتمع</p>
           </div>
-          <div class="promo-card p2" onclick="showPage('appliances')">
+          <div class="promo-card p2" data-anim onclick="showPage('appliances')">
             <div class="promo-emoji">📱</div>
             <h3>أجهزة كهربائية</h3>
             <p>جديدة ومستعملة بضمان</p>
           </div>
-          <div class="promo-card p3" onclick="showPage('lighting')">
+          <div class="promo-card p3" data-anim onclick="showPage('lighting')">
             <div class="promo-emoji">💡</div>
             <h3>إضاءات حديثة</h3>
             <p>ديكور وتوفير في الطاقة</p>
@@ -756,26 +646,26 @@
 
       <!-- QUICK ACCESS -->
       <div class="section">
-        <div class="section-header">
+        <div class="section-header" data-anim>
           <div class="section-title">
             <div class="section-icon green"><i class="ti ti-grid-dots"></i></div>
             تصفح الأقسام
           </div>
         </div>
         <div class="quick-grid">
-          <div class="quick-card" onclick="showPage('furniture')">
+          <div class="quick-card" data-anim-scale onclick="showPage('furniture')">
             <div class="qc-icon" style="background:#e8f5e9;">🛋️</div>
             <span>أثاث</span>
           </div>
-          <div class="quick-card" onclick="showPage('appliances')">
+          <div class="quick-card" data-anim-scale onclick="showPage('appliances')">
             <div class="qc-icon" style="background:#e3f2fd;">🔌</div>
             <span>أجهزة</span>
           </div>
-          <div class="quick-card" onclick="showPage('lighting')">
+          <div class="quick-card" data-anim-scale onclick="showPage('lighting')">
             <div class="qc-icon" style="background:#fff8e1;">💡</div>
             <span>إضاءة</span>
           </div>
-          <div class="quick-card" onclick="showPage('workers')">
+          <div class="quick-card" data-anim-scale onclick="showPage('workers')">
             <div class="qc-icon" style="background:#fce4ec;">🔧</div>
             <span>صنايعية</span>
           </div>
@@ -784,7 +674,7 @@
 
       <!-- FEATURED PRODUCTS -->
       <div class="section">
-        <div class="section-header">
+        <div class="section-header" data-anim>
           <div class="section-title">
             <div class="section-icon amber"><i class="ti ti-star"></i></div>
             منتجات مميزة
@@ -796,25 +686,26 @@
 
       <!-- WORKERS -->
       <div class="section">
-        <div class="section-header">
+        <div class="section-header" data-anim>
           <div class="section-title">
             <div class="section-icon red"><i class="ti ti-tools"></i></div>
             صنايعية وعمال
           </div>
           <button class="see-all" onclick="showPage('workers')">الكل <i class="ti ti-chevron-left"></i></button>
         </div>
-        <div class="workers-scroll" id="home-workers"></div>
+        <!-- Grid instead of horizontal scroll -->
+        <div class="home-workers-grid" id="home-workers"></div>
       </div>
 
       <!-- REQUEST -->
       <div class="section">
-        <div class="section-header">
+        <div class="section-header" data-anim>
           <div class="section-title">
             <div class="section-icon purple"><i class="ti ti-message-plus"></i></div>
             طلب خاص
           </div>
         </div>
-        <div class="request-card">
+        <div class="request-card" data-anim>
           <div class="request-icon">🎯</div>
           <h3>مش لاقي اللي بتدور عليه؟</h3>
           <p>أرسل لنا طلبك وهنوصلك بأفضل العروض من المجتمع</p>
@@ -825,7 +716,7 @@
         </div>
       </div>
     </div>
-  </div><!-- /page-home -->
+  </div>
 
   <!-- ====== PAGE: FURNITURE ====== -->
   <div class="page-view" id="page-furniture">
@@ -945,30 +836,28 @@
       <button class="btn-close-sheet" onclick="closeSheet('upload')"><i class="ti ti-x"></i></button>
       <div class="sheet-title">📦 أضف منتج أو خدمة</div>
 
-      <!-- TABS -->
       <div class="type-tabs">
         <button class="type-tab active" onclick="setUploadType(this,'product')">📦 منتج للبيع</button>
         <button class="type-tab" onclick="setUploadType(this,'service')">🔧 خدمة / صنايعي</button>
       </div>
 
-      <!-- MULTI-IMAGE UPLOAD ZONE -->
       <div class="img-upload-zone" id="upload-img-zone" onclick="triggerImgUpload()">
         <i class="ti ti-camera-plus"></i>
-        <div class="upload-label">اضغط لرفع صور المنتج / الملف الشخصي</div>
+        <div class="upload-label">اضغط لرفع صور المنتج</div>
         <div class="upload-hint">يمكنك رفع حتى 5 صور • JPG, PNG, WEBP</div>
       </div>
       <input type="file" id="img-file-input" accept="image/*" multiple onchange="handleImgUpload(event)">
 
-      <!-- PREVIEW GRID -->
       <div class="img-preview-grid" id="img-preview-grid" style="display:none;"></div>
       <div class="img-count-label" id="img-count-label"></div>
 
-      <!-- WA INFO — updated dynamically by JS based on Share API support -->
-      <div class="wa-send-info" id="wa-send-info">
-        <strong>📸 جاري التحقق من إمكانية الإرسال...</strong>
+      <!-- WA INFO — always shows manual instruction (no Share API) -->
+      <div class="wa-send-info">
+        <strong>📸 كيف ترسل الصور؟</strong>
+        بعد الضغط على "نشر الإعلان" سيفتح واتساب برسالة البيانات تلقائياً.<br>
+        ابعت الصور في نفس المحادثة — الإدارة هتتواصل معك لنشر إعلانك.
       </div>
 
-      <!-- PRODUCT FIELDS -->
       <div class="form-group">
         <label class="form-label">اسم المنتج / الخدمة <span style="color:#c62828;">*</span></label>
         <input class="form-input" type="text" id="up-name" placeholder="مثال: كنبة 3 مقاعد">
@@ -1037,57 +926,44 @@
 
       <button class="btn-primary" onclick="submitUpload()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        نشر الإعلان
+        نشر الإعلان عبر واتساب
       </button>
     </div>
   </div>
 
   <script>
-    const WA_NUM = '201129724884';
+    const WA_NUM   = '201129724884';
     const MAX_IMAGES = 5;
 
-    /* ====================================================
-       STORAGE — two parallel arrays for the same images:
-       uploadedPreviews : base64 data URLs  → for <img> preview
-       uploadedFiles    : File objects      → for Web Share API
-       ==================================================== */
     let uploadedPreviews = [];
     let uploadedFiles    = [];
 
-    /* ====================================================
-       DETECT WEB SHARE FILE SUPPORT
-       navigator.canShare({ files }) is the spec-correct
-       way to test file-sharing capability.
-       ==================================================== */
-    const canShareFiles = (() => {
-      try {
-        if (!navigator.share || !navigator.canShare) return false;
-        const testFile = new File([''], 'test.jpg', { type: 'image/jpeg' });
-        return navigator.canShare({ files: [testFile] });
-      } catch (_) { return false; }
-    })();
+    /* =====================================================
+       INTERSECTION OBSERVER — smooth staggered reveals
+       ===================================================== */
+    const animObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('anim-visible');
+          animObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
 
-    /* ====================================================
-       UPDATE WA-INFO BANNER based on Share API support
-       ==================================================== */
-    document.addEventListener('DOMContentLoaded', () => {
-      const infoEl = document.getElementById('wa-send-info');
-      if (canShareFiles) {
-        infoEl.innerHTML = `
-          <span class="share-badge">✅ إرسال تلقائي مدعوم</span>
-          <strong>📸 الصور تُرسل تلقائياً مع الرسالة</strong>
-          اضغط "نشر الإعلان" ← اختر واتساب من القائمة ← اضغط إرسال مرة واحدة فقط.`;
-      } else {
-        infoEl.innerHTML = `
-          <strong>📸 كيف ترسل الصور؟</strong>
-          بعد الضغط على "نشر الإعلان"، سيفتح واتساب برسالة البيانات.<br>
-          ابعت الصور في نفس المحادثة مباشرة — الإدارة هتتواصل معك لنشر إعلانك.`;
-      }
-    });
+    function observeAll(scope) {
+      const root = scope || document;
+      root.querySelectorAll('[data-anim], [data-anim-scale], [data-anim-left]').forEach((el, idx) => {
+        if (el.classList.contains('anim-visible')) return;
+        /* Stagger: group by row of 4, delay within group */
+        const delay = (idx % 4) * 75;
+        el.style.transitionDelay = delay + 'ms';
+        animObserver.observe(el);
+      });
+    }
 
-    /* ====================================================
-       PRODUCT / WORKER DATA
-       ==================================================== */
+    /* =====================================================
+       DATA
+       ===================================================== */
     const products = [
       { id:1,  name:'كنبة 3+2+1 كلاسيك',       price:8500,  condition:'new',  category:'صالة',    type:'furniture',  emoji:'🛋️', rating:4.8, reviews:12 },
       { id:2,  name:'غرفة نوم كاملة 4 قطع',     price:15000, condition:'used', category:'غرف نوم', type:'furniture',  emoji:'🛏️', rating:4.5, reviews:8  },
@@ -1114,16 +990,16 @@
 
     const WA_SVG = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`;
 
-    /* ====================================================
-       CARD RENDERERS
-       ==================================================== */
+    /* =====================================================
+       CARD RENDERERS — data-anim on every card
+       ===================================================== */
     function makeProductCard(p) {
       const badge = p.condition === 'new' ? 'جديد' : 'مستعمل';
       const badgeClass = p.condition === 'new' ? 'badge-new' : 'badge-used';
       const waMsg = encodeURIComponent(`مرحباً، أنا مهتم بـ: ${p.name}\nالسعر: ${p.price.toLocaleString()} جنيه\nالحالة: ${badge}\nأرجو التواصل.`);
-      const stars = '★'.repeat(Math.floor(p.rating)) + (p.rating % 1 >= 0.5 ? '☆' : '');
+      const stars = '★'.repeat(Math.floor(p.rating));
       return `
-  <div class="product-card">
+  <div class="product-card" data-anim>
     <div class="product-img-wrap">
       <div class="product-img-placeholder">${p.emoji}</div>
     </div>
@@ -1148,7 +1024,7 @@
       const waMsg = encodeURIComponent(`مرحباً ${w.name}، رأيت إعلانك في منصة بيتك الجديد.\nأحتاج خدمة ${w.trade}.\nأرجو التواصل.`);
       const stars = '★'.repeat(Math.floor(w.rating));
       return `
-  <div class="worker-card">
+  <div class="worker-card" data-anim>
     <div class="worker-avatar">${w.initials}</div>
     <div class="worker-name">${w.name}</div>
     <div class="worker-trade">${w.trade}</div>
@@ -1162,16 +1038,18 @@
   </div>`;
     }
 
-    /* ====================================================
+    /* =====================================================
        INIT
-       ==================================================== */
+       ===================================================== */
     function init() {
-      document.getElementById('home-products').innerHTML  = products.slice(0,6).map(makeProductCard).join('');
-      document.getElementById('home-workers').innerHTML   = workers.slice(0,5).map(makeWorkerCard).join('');
+      document.getElementById('home-products').innerHTML = products.slice(0,6).map(makeProductCard).join('');
+      document.getElementById('home-workers').innerHTML  = workers.slice(0,4).map(makeWorkerCard).join('');
       renderFiltered('furniture','all');
       renderFiltered('appliances','all');
       renderFiltered('lighting','all');
       renderWorkers('all');
+      /* Observe after a small tick so DOM is settled */
+      requestAnimationFrame(() => observeAll());
     }
 
     function renderFiltered(type, filter) {
@@ -1182,19 +1060,25 @@
         else                        f = f.filter(p => p.category  === filter);
       }
       const el = document.getElementById(type+'-products');
-      if (el) el.innerHTML = f.length ? f.map(makeProductCard).join('') :
-        `<div class="empty-state"><div class="empty-icon">🔍</div><p>لا توجد منتجات في هذا التصنيف</p></div>`;
+      if (!el) return;
+      el.innerHTML = f.length
+        ? f.map(makeProductCard).join('')
+        : `<div class="empty-state"><div class="empty-icon">🔍</div><p>لا توجد منتجات في هذا التصنيف</p></div>`;
+      requestAnimationFrame(() => observeAll(el));
     }
 
     function renderWorkers(filter) {
       let f = filter === 'all' ? workers : workers.filter(w => w.trade === filter);
-      document.getElementById('workers-grid').innerHTML = f.length ? f.map(makeWorkerCard).join('') :
-        `<div class="empty-state" style="grid-column:1/-1;"><div class="empty-icon">🔧</div><p>لا يوجد صنايعية في هذا التخصص</p></div>`;
+      const el = document.getElementById('workers-grid');
+      el.innerHTML = f.length
+        ? f.map(makeWorkerCard).join('')
+        : `<div class="empty-state" style="grid-column:1/-1;"><div class="empty-icon">🔧</div><p>لا يوجد صنايعية في هذا التخصص</p></div>`;
+      requestAnimationFrame(() => observeAll(el));
     }
 
-    /* ====================================================
+    /* =====================================================
        NAVIGATION
-       ==================================================== */
+       ===================================================== */
     function showPage(page) {
       document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
       document.getElementById('page-'+page).classList.add('active');
@@ -1202,6 +1086,8 @@
       const map = { home:0, furniture:1, workers:2 };
       if (map[page] !== undefined) document.querySelectorAll('.nav-item')[map[page]].classList.add('active');
       window.scrollTo({ top:0, behavior:'instant' });
+      /* Re-observe elements in the newly shown page */
+      requestAnimationFrame(() => observeAll(document.getElementById('page-'+page)));
     }
 
     function filterCat(btn, filter, type) {
@@ -1209,19 +1095,19 @@
       btn.classList.add('active');
       renderFiltered(type, filter);
     }
-
     function filterWorkers(btn, filter) {
       btn.closest('.cat-filter').querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
       btn.classList.add('active');
       renderWorkers(filter);
     }
 
-    /* ====================================================
+    /* =====================================================
        LIVE SEARCH
-       ==================================================== */
+       ===================================================== */
     function liveSearch(q) {
       if (!q.trim()) {
         document.getElementById('home-products').innerHTML = products.slice(0,6).map(makeProductCard).join('');
+        requestAnimationFrame(() => observeAll(document.getElementById('home-products')));
         return;
       }
       const lq = q.toLowerCase();
@@ -1230,17 +1116,20 @@
         p.category.toLowerCase().includes(lq) ||
         p.type.toLowerCase().includes(lq)
       );
-      document.getElementById('home-products').innerHTML = res.length ? res.map(makeProductCard).join('') :
-        `<div class="empty-state" style="grid-column:1/-1;">
-          <div class="empty-icon">🔍</div>
-          <p>لا توجد نتائج لـ "${q}"</p>
-          <button class="btn-request" style="margin-top:14px;font-size:13px;padding:10px 20px;" onclick="openSheet('request')">أرسل طلب خاص</button>
-        </div>`;
+      const el = document.getElementById('home-products');
+      el.innerHTML = res.length
+        ? res.map(makeProductCard).join('')
+        : `<div class="empty-state" style="grid-column:1/-1;">
+            <div class="empty-icon">🔍</div>
+            <p>لا توجد نتائج لـ "${q}"</p>
+            <button class="btn-request" style="margin-top:14px;font-size:13px;padding:10px 20px;" onclick="openSheet('request')">أرسل طلب خاص</button>
+           </div>`;
+      requestAnimationFrame(() => observeAll(el));
     }
 
-    /* ====================================================
+    /* =====================================================
        SHEETS
-       ==================================================== */
+       ===================================================== */
     function openSheet(name) {
       document.getElementById('overlay-'+name).classList.add('open');
       document.body.style.overflow = 'hidden';
@@ -1253,9 +1142,9 @@
       if (e.target === document.getElementById('overlay-'+name)) closeSheet(name);
     }
 
-    /* ====================================================
-       REQUEST FORM → WHATSAPP
-       ==================================================== */
+    /* =====================================================
+       REQUEST → WHATSAPP DIRECT
+       ===================================================== */
     function sendRequest() {
       const type    = document.getElementById('req-type').value;
       const details = document.getElementById('req-details').value;
@@ -1265,14 +1154,15 @@
         `🎯 طلب جديد من بيتك الجديد\n\nنوع الطلب: ${type}\nالتفاصيل: ${details}` +
         (budget ? `\nالميزانية: ${budget} جنيه` : '')
       );
+      /* Opens WhatsApp directly to the admin number with pre-filled text */
       window.open(`https://wa.me/${WA_NUM}?text=${msg}`, '_blank');
       closeSheet('request');
       showToast('✅ جاري فتح واتساب...');
     }
 
-    /* ====================================================
+    /* =====================================================
        UPLOAD TYPE TOGGLE
-       ==================================================== */
+       ===================================================== */
     let uploadType = 'product';
     function setUploadType(btn, type) {
       document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
@@ -1288,78 +1178,65 @@
         isService ? 'اضغط لرفع صورتك الشخصية أو أعمالك السابقة' : 'اضغط لرفع صور المنتج';
     }
 
-    /* ====================================================
-       IMAGE UPLOAD — keep File objects for Share API
-       ==================================================== */
+    /* =====================================================
+       IMAGE UPLOAD
+       ===================================================== */
     function triggerImgUpload() {
-      if (uploadedFiles.length >= MAX_IMAGES) {
-        showToast(`⚠️ الحد الأقصى ${MAX_IMAGES} صور`);
-        return;
-      }
+      if (uploadedFiles.length >= MAX_IMAGES) { showToast(`⚠️ الحد الأقصى ${MAX_IMAGES} صور`); return; }
       document.getElementById('img-file-input').click();
     }
 
     function handleImgUpload(event) {
-      const files = Array.from(event.target.files);
+      const files     = Array.from(event.target.files);
       if (!files.length) return;
-      const remaining  = MAX_IMAGES - uploadedFiles.length;
-      const toProcess  = files.slice(0, remaining);
+      const remaining = MAX_IMAGES - uploadedFiles.length;
+      const toProcess = files.slice(0, remaining);
       if (files.length > remaining) showToast(`⚠️ تم اختيار أول ${remaining} صور فقط`);
-
       let loaded = 0;
       toProcess.forEach(file => {
         if (!file.type.startsWith('image/')) return;
-        uploadedFiles.push(file);               // keep File object for sharing
+        uploadedFiles.push(file);
         const reader = new FileReader();
         reader.onload = (e) => {
-          uploadedPreviews.push(e.target.result); // base64 for preview only
+          uploadedPreviews.push(e.target.result);
           loaded++;
           if (loaded === toProcess.length) renderImagePreviews();
         };
         reader.readAsDataURL(file);
       });
-      event.target.value = ''; // allow re-selecting same files
+      event.target.value = '';
     }
 
     function renderImagePreviews() {
       const grid  = document.getElementById('img-preview-grid');
       const zone  = document.getElementById('upload-img-zone');
       const label = document.getElementById('img-count-label');
-
       if (uploadedPreviews.length === 0) {
-        grid.style.display = 'none';
-        zone.style.display = '';
-        label.classList.remove('visible');
-        return;
+        grid.style.display = 'none'; zone.style.display = '';
+        label.classList.remove('visible'); return;
       }
-
-      zone.style.display = 'none';
-      grid.style.display = 'grid';
-      const shareNote = canShareFiles ? ' (ستُرسل تلقائياً)' : '';
-      label.textContent = `✅ ${uploadedPreviews.length} صورة جاهزة${shareNote}`;
+      zone.style.display = 'none'; grid.style.display = 'grid';
+      label.textContent = `✅ ${uploadedPreviews.length} صورة جاهزة — ستُرسل مع الرسالة`;
       label.classList.add('visible');
-
       let html = uploadedPreviews.map((src, i) => `
         <div class="img-preview-item">
           <img src="${src}" alt="صورة ${i+1}">
           <button class="remove-img-btn" onclick="removeImg(${i})">×</button>
         </div>`).join('');
-
-      if (uploadedPreviews.length < MAX_IMAGES) {
+      if (uploadedPreviews.length < MAX_IMAGES)
         html += `<div class="img-preview-item add-more" onclick="triggerImgUpload()">+</div>`;
-      }
       grid.innerHTML = html;
     }
 
     function removeImg(idx) {
       uploadedPreviews.splice(idx, 1);
-      uploadedFiles.splice(idx, 1);   // keep both arrays in sync
+      uploadedFiles.splice(idx, 1);
       renderImagePreviews();
     }
 
-    /* ====================================================
+    /* =====================================================
        BUILD TEXT MESSAGE
-       ==================================================== */
+       ===================================================== */
     function buildUploadMessage(name, desc, phone) {
       if (uploadType === 'product') {
         const price = document.getElementById('up-price').value;
@@ -1390,48 +1267,19 @@
       }
     }
 
-    /* ====================================================
-       SUBMIT UPLOAD
-       ─────────────────────────────────────────────────
-       FLOW A (mobile, Web Share API supported):
-         navigator.share({ files, text }) → native share sheet
-         → user picks WhatsApp → images + text sent in ONE tap.
-         WhatsApp shows images first, caption (text) below.
-
-       FLOW B (desktop / unsupported browser):
-         Opens wa.me URL with text, instructs user to send
-         images manually in the same conversation.
-       ==================================================== */
-    async function submitUpload() {
+    /* =====================================================
+       SUBMIT UPLOAD — ALWAYS direct wa.me URL, no Share API
+       ===================================================== */
+    function submitUpload() {
       const name  = document.getElementById('up-name').value.trim();
       const desc  = document.getElementById('up-desc').value.trim();
       const phone = document.getElementById('up-phone').value.trim();
-
       if (!name)  { showToast('⚠️ يرجى كتابة اسم المنتج أو الخدمة'); return; }
       if (!phone) { showToast('⚠️ يرجى إدخال رقم الواتساب');         return; }
 
       const msgText = buildUploadMessage(name, desc, phone);
-
-      /* ── FLOW A: Web Share API with files ────────────── */
-      if (uploadedFiles.length > 0 && canShareFiles) {
-        try {
-          await navigator.share({ files: uploadedFiles, text: msgText });
-          // If we reach here the share was successful (or silently dismissed)
-          showToast('✅ تم الإرسال بنجاح!');
-          setTimeout(() => { closeSheet('upload'); resetUploadForm(); }, 600);
-          return;
-        } catch (err) {
-          if (err.name === 'AbortError') {
-            // User cancelled the share sheet — do nothing
-            return;
-          }
-          // Any other error → fall through to Flow B
-        }
-      }
-
-      /* ── FLOW B: WhatsApp URL fallback ───────────────── */
-      const waUrl = `https://wa.me/${WA_NUM}?text=${encodeURIComponent(msgText)}`;
-      window.open(waUrl, '_blank');
+      /* Open WhatsApp directly — no share sheet, no contact picker */
+      window.open(`https://wa.me/${WA_NUM}?text=${encodeURIComponent(msgText)}`, '_blank');
 
       if (uploadedFiles.length > 0) {
         showToast(`✅ افتح واتساب وابعت ${uploadedFiles.length} صورة في نفس المحادثة`);
@@ -1441,55 +1289,47 @@
       setTimeout(() => { closeSheet('upload'); resetUploadForm(); }, 1400);
     }
 
-    /* ====================================================
+    /* =====================================================
        RESET UPLOAD FORM
-       ==================================================== */
+       ===================================================== */
     function resetUploadForm() {
-      uploadedPreviews = [];
-      uploadedFiles    = [];
+      uploadedPreviews = []; uploadedFiles = [];
       renderImagePreviews();
-      ['up-name','up-desc','up-phone','up-price'].forEach(id => {
-        document.getElementById(id).value = '';
-      });
+      ['up-name','up-desc','up-phone','up-price'].forEach(id => { document.getElementById(id).value = ''; });
       document.getElementById('img-file-input').value = '';
     }
 
-    /* ====================================================
-       DRAG & DROP — also capture File objects
-       ==================================================== */
+    /* =====================================================
+       DRAG & DROP
+       ===================================================== */
     const uploadZone = document.getElementById('upload-img-zone');
     uploadZone.addEventListener('dragover',  e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
     uploadZone.addEventListener('dragleave', ()  => uploadZone.classList.remove('drag-over'));
     uploadZone.addEventListener('drop', e => {
-      e.preventDefault();
-      uploadZone.classList.remove('drag-over');
+      e.preventDefault(); uploadZone.classList.remove('drag-over');
       const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
       if (!files.length) return;
       const remaining = MAX_IMAGES - uploadedFiles.length;
       if (remaining <= 0) { showToast(`⚠️ الحد الأقصى ${MAX_IMAGES} صور`); return; }
       files.slice(0, remaining).forEach(file => {
-        uploadedFiles.push(file);                   // File object
+        uploadedFiles.push(file);
         const reader = new FileReader();
-        reader.onload = ev => {
-          uploadedPreviews.push(ev.target.result);  // base64 preview
-          renderImagePreviews();
-        };
+        reader.onload = ev => { uploadedPreviews.push(ev.target.result); renderImagePreviews(); };
         reader.readAsDataURL(file);
       });
     });
 
-    /* ====================================================
+    /* =====================================================
        TOAST
-       ==================================================== */
+       ===================================================== */
     function showToast(msg) {
       const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.classList.add('show');
+      t.textContent = msg; t.classList.add('show');
       clearTimeout(t._timer);
       t._timer = setTimeout(() => t.classList.remove('show'), 2800);
     }
 
-    /* ── INIT ── */
+    /* ── BOOT ── */
     init();
   </script>
 </body>
